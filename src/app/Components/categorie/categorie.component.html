@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <link rel="stylesheet" href="categorie.component.css">
+    
+<title>Ajouter Categorie</title>
+</head>
+    <body>
+
+        <div *ngIf="successMessage" class="alert alert-success mt-3">
+            {{ successMessage }}
+        </div>
+
+        <mat-card>
+            <mat-card-content class="categorie-container" style="font-family: 'Times New Roman', Times, serif " >
+                <span class="categorie">Categorie</span>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Ajouter une categorie</button>
+
+                <!-- Modale pour afficher le formulaire -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel" style="font-family: 'Times New Roman', Times, serif;">Formulaire d'Ajout de categorie</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Formulaire d'Ajout de categorie -->
+                                <form class="row g-3" [formGroup]="categorieForm" (ngSubmit)="onAddCategorie()">
+                                    <div class="col-mb-4">
+                                        <label for="nomCategorie" class="form-label">Nom de la Categorie : </label>
+                                        <input type="text" class="form-control" id="nomCategorie" placeholder="Entrez le nom de la categorie" formControlName="nomCategorie">
+                                        <div *ngIf="categorieForm.get('nomCategorie')?.invalid && (categorieForm.get('nomCategorie')?.dirty || categorieForm.get('nomCategorie')?.touched)"
+                                            class="alert alert-danger">
+                                            <div *ngIf="categorieForm.get('nomCategorie')?.errors?.['required']">
+                                                Nom Categorie est requis.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-mb-4">
+                                        
+                                        <div class="mb-3">
+                                            <label for="description" class="col-form-label">Description:</label>
+                                            <textarea class="form-control" id="description" placeholder="Entrez la description" formControlName="description"></textarea>
+                                            <div *ngIf="categorieForm.get('description')?.invalid && (categorieForm.get('description')?.dirty || categorieForm.get('description')?.touched)"
+                                                class="alert alert-danger">
+                                                <div *ngIf="categorieForm.get('description')?.errors?.['required']">
+                                                    Description est requis.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </mat-card-content>
+        </mat-card>
+        
+            <br>
+
+            
+
+            <nav id="navbar-example2" class="navbar bg-body-tertiary px-3 mb-3">
+                Liste Des Categories 
+            </nav>
+        
+        
+            <div class="search-bar">
+                <input [(ngModel)]="searchValue" placeholder="Rechercher une categorie" />
+                <i class="fas fa-search"></i>
+            </div>
+        
+            <table class="table" style="font-family: 'Times New Roman', Times, serif;">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Nom categorie</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr *ngFor="let categorie of filteredCategorie ">
+                        <td style="font-family: 'Times New Roman', Times, serif;"> {{ categorie.categorieId }}</td>
+                        <td style="font-family: 'Times New Roman', Times, serif;"> {{ categorie.nomCategorie }} </td>
+                        <td style="font-family: 'Times New Roman', Times, serif;"> {{ categorie.description }} </td>
+                        <td>
+                            <div style="display: flex; gap: 20px;">
+                                <button class="icon-button" (click)="onDeleteCategorieConfirmation(categorie.categorieId)"><i class="fas fa-trash-alt" style="color: red;"></i></button>
+                                <button  class="icon-button" data-bs-toggle="modal" data-bs-target="#exampleModal1" data-bs-whatever="@mdo"><i class="fas fa-edit" style="color: blue;"></i></button>
+
+                                <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                        <div class="mb-3">
+                                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                                            <input type="text" class="form-control" id="recipient-name">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="message-text" class="col-form-label">Message:</label>
+                                            <textarea class="form-control" id="message-text"></textarea>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-primary">Send message</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </td>
+        
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Ajoutez ce bouton dans votre tableau pour chaque catégorie -->
+          
+
+               <div class="pagination">
+                    <button class="page-button" style="color: blue;" *ngFor="let page of getPageNumbers()"
+                        [class.active]="currentPage === page"
+                        (click)="onPageChange(page)">
+                        {{ page }}
+                    </button>
+        </div>
+  
+  <!-- Ajoutez ce tableau pour afficher les produits -->
+ 
+            <div class="container">
+                <router-outlet> </router-outlet>
+            </div>
+
+            <!-- Dans votre fichier HTML -->
+    <!-- Nouveaux scripts Bootstrap 5 -->
+
+    
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+</body>
+
+</html>
